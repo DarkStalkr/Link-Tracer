@@ -27,6 +27,9 @@ document.addEventListener('DOMContentLoaded', function() {
                 action: "setProxy", 
                 proxyConfig: { type: proxyType, host, port }
             });
+
+            // Mostrar el mensaje de confirmación como alerta
+            alert('Saved Succesfully: The proxy configuration was saved succesfully.');
         }
     });
 });
