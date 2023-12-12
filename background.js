@@ -59,3 +59,22 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         // Lógica para desactivar la extensión
     }
 });
+
+
+chrome.runtime.onInstalled.addListener(function() {
+    // Crear un menú contextual para enlaces
+    chrome.contextMenus.create({
+        title: "Analizar con Link Tracer",
+        contexts: ["link"],  // Aparece solo para enlaces
+        onclick: function(info, tab) {
+            if(info.linkUrl) {
+                // Lógica para analizar el enlace
+                analyzeLink(info.linkUrl);
+            }
+        }
+    });
+});
+
+function analyzeLink(url) {
+    // Lógica de análisis
+}

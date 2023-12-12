@@ -8,6 +8,7 @@
         "tabs",
         "webRequest",
         "proxy",
+        "contextMenus",
         "webRequestBlocking"
     ],
     "content_scripts": [
