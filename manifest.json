@@ -5,7 +5,10 @@
     "permissions": [
         "activeTab",
         "storage",
-        "tabs"
+        "tabs",
+        "webRequest",
+        "proxy",
+        "webRequestBlocking"
     ],
     "content_scripts": [
         {
@@ -13,11 +16,15 @@
             "js": ["main.js"]
         }
     ],
+    "background": {
+        "scripts": ["background.js"],
+        "persistent": true
+    },
     "browser_action": {
+        "default_popup": "popup.html",
         "default_icon": {
             "19": "logo2.png"
-        },
-        "default_popup": "log.html"
+        }
     },
     "icons": {
         "48": "logo2.png"

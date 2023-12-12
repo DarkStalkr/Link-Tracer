@@ -1,58 +1,37 @@
-document.addEventListener('click', function (event) {
-    if (event.target.tagName === 'A') {
-        const linkUrl = event.target.href;
-        const requestMethod = 'POST';  // Reemplaza con el método de solicitud real
-        const statusCode = 200;       // Reemplaza con el código de estado real
-        const remoteAddress = '[2620:1ec:21::14]:443';  // Reemplaza con la dirección remota real
-        const referrerPolicy = 'strict-origin-when-cross-origin';  // Reemplaza con la política de referencia real
+let linkBatch = [];
 
+// Función para registrar información de enlaces
+function registerLink(linkUrl) {
+    // Realizar petición HEAD para obtener información del enlace
+    fetch(linkUrl, { method: 'HEAD' }).then(response => {
         const linkData = {
             url: linkUrl,
-            method: requestMethod,
-            status: statusCode,
-            address: remoteAddress,
-            referrer: referrerPolicy
+            method: response.method,
+            status: response.status,
+            address: response.url,
+            referrer: document.referrer
         };
 
-        chrome.storage.local.get({ clickedLinks: [] }, function (data) {
-            const clickedLinks = data.clickedLinks;
-            clickedLinks.push(linkData);
+        linkBatch.push(linkData);
 
-            chrome.storage.local.set({ clickedLinks: clickedLinks }, function () {
-                console.log('Enlace registrado: ' + linkUrl);
-            });
-        });
-    }
-});
-
-
-// Configuración del servidor proxy (si se proporciona por el usuario)
-let serverProxyConfig = null;
-
-// Comprueba si el usuario ha proporcionado una configuración de servidor proxy
-chrome.storage.local.get('proxyConfig', function (data) {
-    serverProxyConfig = data.proxyConfig;
-});
-
-// Función para enrutar solicitudes a través del servidor proxy
-function enrutarAtravésDelProxy(requestDetails) {
-    // Comprueba si se proporcionó una configuración de servidor proxy
-    if (serverProxyConfig) {
-        const { host, port } = serverProxyConfig;
-        const proxyServer = `http://${host}:${port}`;
-        
-        // Enruta la solicitud a través del servidor proxy especificado
-        return { proxyInfo: { host, port } };
-    } else {
-        // Si no se proporcionó una configuración de servidor proxy, utiliza la red Tor
-        const torProxy = 'socks://127.0.0.1:9050'; // Cambia esto según la configuración de tu sistema
-        return { proxyInfo: torProxy };
-    }
+        if (linkBatch.length >= 10) { // Actualizar cada 10 enlaces
+            updateStorage();
+        }
+    }).catch(error => console.error('Error al obtener datos del enlace:', error));
 }
 
-// Registra la función de enrutamiento para las solicitudes
-chrome.webRequest.onBeforeRequest.addListener(
-    enrutarAtravésDelProxy,
-    { urls: ['<all_urls>'] },
-    ['blocking']
-);
+// Evento de click para capturar enlaces
+document.addEventListener('click', function (event) {
+    if (event.target.tagName === 'A') {
+        registerLink(event.target.href);
+    }
+});
+
+// Actualizar almacenamiento local
+function updateStorage() {
+    chrome.storage.local.get({ clickedLinks: [] }, function (data) {
+        const updatedLinks = data.clickedLinks.concat(linkBatch);
+        chrome.storage.local.set({ clickedLinks: updatedLinks });
+        linkBatch = [];
+    });
+}
