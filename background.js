@@ -3,22 +3,42 @@ let extensionEnabled = true; // Variable para rastrear el estado de activación 
 
 // Función para actualizar la configuración del proxy
 function updateProxyConfig(proxyConfig) {
-    chrome.proxy.settings.set({
-        value: {
-            mode: 'fixed_servers',
-            rules: {
-                singleProxy: {
-                    scheme: 'http',
-                    host: proxyConfig.host,
-                    port: parseInt(proxyConfig.port, 10)
+    // Asegúrate de que todos los valores necesarios están presentes y son válidos
+    const portNumber = parseInt(proxyConfig.port, 10);
+    if (!proxyConfig.type || typeof proxyConfig.type !== 'string' ||
+        !proxyConfig.host || typeof proxyConfig.host !== 'string' ||
+        isNaN(portNumber)) {
+        console.error("Configuración de proxy incompleta o inválida:", proxyConfig);
+        return;
+    }
+
+    // Convertir el tipo de proxy a minúsculas
+    const proxyTypeLower = proxyConfig.type.toLowerCase();
+
+    try {
+        chrome.proxy.settings.set({
+            value: {
+                mode: 'fixed_servers',
+                rules: {
+                    singleProxy: {
+                        scheme: proxyTypeLower,
+                        host: proxyConfig.host,
+                        port: portNumber
+                    }
                 }
-            }
-        }
-    });
+            },
+            scope: 'regular'
+        });
+    } catch (error) {
+        console.error("Error al configurar el proxy:", error, "\nConfiguración proporcionada:", JSON.stringify(proxyConfig, null, 2));
+    }
 }
 
+
+
+
 // Obtener la configuración del proxy del almacenamiento local
-chrome.storage.local.get('proxyConfig', function (data) {
+chrome.storage.local.get('proxyConfig', function(data) {
     serverProxyConfig = data.proxyConfig;
     if (serverProxyConfig) {
         updateProxyConfig(serverProxyConfig);
@@ -29,11 +49,9 @@ chrome.storage.local.get('proxyConfig', function (data) {
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     if (request.action === "toggle") {
         extensionEnabled = !extensionEnabled;
-        // Aquí puedes agregar lógica adicional para manejar la activación/desactivación
     } else if (request.action === "setProxy") {
         serverProxyConfig = request.proxyConfig;
         updateProxyConfig(serverProxyConfig);
-        // Guardar la nueva configuración en el almacenamiento local
         chrome.storage.local.set({ 'proxyConfig': serverProxyConfig });
     }
 });
@@ -42,33 +60,20 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 chrome.webRequest.onBeforeRequest.addListener(
     function (details) {
         if (extensionEnabled) {
-            // Aquí puedes agregar lógica adicional basada en la configuración del proxy
-            // Por ejemplo, redireccionar las solicitudes a través del proxy configurado
+            // Lógica basada en la configuración del proxy
         }
-        // Si la extensión no está activada, no se modifica la solicitud
     },
     { urls: ['<all_urls>'] },
     ['blocking']
 );
 
-
-chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-    if (request.action === "activateExtension") {
-        // Lógica para activar la extensión
-    } else if (request.action === "deactivateExtension") {
-        // Lógica para desactivar la extensión
-    }
-});
-
-
+// Listener para el evento onInstalled
 chrome.runtime.onInstalled.addListener(function() {
-    // Crear un menú contextual para enlaces
     chrome.contextMenus.create({
         title: "Analizar con Link Tracer",
-        contexts: ["link"],  // Aparece solo para enlaces
+        contexts: ["link"],
         onclick: function(info, tab) {
             if(info.linkUrl) {
-                // Lógica para analizar el enlace
                 analyzeLink(info.linkUrl);
             }
         }
@@ -76,5 +81,8 @@ chrome.runtime.onInstalled.addListener(function() {
 });
 
 function analyzeLink(url) {
-    // Lógica de análisis
+    // Construir la URL de la página de análisis con la URL del enlace como parámetro
+    var analysisPageUrl = chrome.runtime.getURL("analysis.html") + "?url=" + encodeURIComponent(url);
+    chrome.tabs.create({ url: analysisPageUrl });
 }
+

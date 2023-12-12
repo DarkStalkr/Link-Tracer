@@ -17,12 +17,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Evento para guardar la configuración del proxy
     saveButton.addEventListener('click', function() {
+        var proxyType = document.getElementById('proxyType').value;
         var host = document.getElementById('proxyHost').value;
         var port = document.getElementById('proxyPort').value;
 
-        if (host && port) {
+        if (proxyType && host && port) {
             // Envía un mensaje al background script con la nueva configuración
-            chrome.runtime.sendMessage({ action: "setProxy", proxyConfig: { host, port } });
+            chrome.runtime.sendMessage({
+                action: "setProxy", 
+                proxyConfig: { type: proxyType, host, port }
+            });
         }
     });
 });
