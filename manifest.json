@@ -1,0 +1,25 @@
+{
+    "manifest_version": 2,
+    "version": "1.0",
+    "name": "LinkTracer",
+    "permissions": [
+        "activeTab",
+        "storage",
+        "tabs"
+    ],
+    "content_scripts": [
+        {
+            "matches": ["<all_urls>"],
+            "js": ["main.js"]
+        }
+    ],
+    "browser_action": {
+        "default_icon": {
+            "19": "logo2.png"
+        },
+        "default_popup": "log.html"
+    },
+    "icons": {
+        "48": "logo2.png"
+    }
+}
