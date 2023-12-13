@@ -5,16 +5,18 @@ LinkTracer is a Google Chrome browser extension that allows users to analyze web
 
 ## Key Features
 
-
-
 ### Proxy Configuration
 The extension allows users to configure a proxy server for anonymous and secure browsing. They can specify the type of proxy, the host, and the desired port.
 
 ### Link Analysis
-When users right-click on a link on a web page, LinkTracer analyzes the link's URL for relevant information. This includes the IP address of the linked server, the types of outbound requests it makes, and other important data.
+URL Analysis: Perform both static and dynamic analysis of web addresses (URLs) to mitigate the risks associated with fraudulent links and sophisticated phishing tactics. It involves scrutinizing sender information (IP and MAC addresses), request types (POST, GET, etc.), and the target website.
+
+Code Injection Detection: Proactively scan for injected malicious codes, including keyloggers, Beef Hooks, and more, ensuring a robust defense against covert cyber threats.
 
 ### Security
 LinkTracer automatically disables any potentially dangerous scripts or content on the destination page of the link. This helps protect users from online threats.
+
+Anonymity and Safe Browsing: Operate in a secure environment by masking user identity through proxies, TOR routing, or VPNs, thus prioritizing user privacy and security.
 
 ### WHOIS Lookup
 The extension performs a WHOIS lookup on the IP address of the linked server to provide information about the owner or organization behind the linked website.
@@ -35,6 +37,9 @@ To install LinkTracer, follow these steps:
 4. Activate or deactivate the extension as needed.
 
 Enjoy secure and informed browsing with LinkTracer!
+
+## Future Scope:
+The project is in its nascent stages (version 1.1), and future improvements are envisioned based on its trajectory and user feedback.
 
 ## Contributing
 
