@@ -4,8 +4,7 @@ LinkTracer is a Google Chrome browser extension that allows users to analyze web
 
 ## Key Features
 
-### Extension Activation/Deactivation
-LinkTracer offers users the ability to enable or disable the extension with a simple toggle switch. This allows them to control when they want to use the link analysis functionality.
+
 
 ### Proxy Configuration
 The extension allows users to configure a proxy server for anonymous and secure browsing. They can specify the type of proxy, the host, and the desired port.
