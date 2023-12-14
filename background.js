@@ -1,9 +1,9 @@
-let serverProxyConfig = null;
-let extensionEnabled = true; // Variable para rastrear el estado de activación de la extensión
+let proxyList = []; // Lista de configuraciones de proxy
+let currentProxyIndex = 0; // Índice del proxy actual
+let extensionEnabled = true; // Estado de activación de la extensión
 
 // Función para actualizar la configuración del proxy
 function updateProxyConfig(proxyConfig) {
-    // Asegúrate de que todos los valores necesarios están presentes y son válidos
     const portNumber = parseInt(proxyConfig.port, 10);
     if (!proxyConfig.type || typeof proxyConfig.type !== 'string' ||
         !proxyConfig.host || typeof proxyConfig.host !== 'string' ||
@@ -12,9 +12,7 @@ function updateProxyConfig(proxyConfig) {
         return;
     }
 
-    // Convertir el tipo de proxy a minúsculas
     const proxyTypeLower = proxyConfig.type.toLowerCase();
-
     try {
         chrome.proxy.settings.set({
             value: {
@@ -30,11 +28,28 @@ function updateProxyConfig(proxyConfig) {
             scope: 'regular'
         });
     } catch (error) {
-        console.error("Error al configurar el proxy:", error, "\nConfiguración proporcionada:", JSON.stringify(proxyConfig, null, 2));
+        console.error("Error al configurar el proxy:", error);
     }
 }
 
-// Service Worker - Listener para mensajes de la interfaz de usuario (popup)
+// Función para cambiar al siguiente proxy en la lista
+function switchToNextProxy() {
+    currentProxyIndex = (currentProxyIndex + 1) % proxyList.length;
+    updateProxyConfig(proxyList[currentProxyIndex]);
+}
+
+// Función para verificar la conectividad del proxy actual
+function checkProxyConnectivity() {
+    // Implementar la lógica para comprobar la conectividad del proxy actual
+    // Esta es una función de ejemplo, debes implementar la lógica real
+    const proxyIsWorking = true; // Simular resultado de la comprobación
+
+    if (!proxyIsWorking) {
+        switchToNextProxy();
+    }
+}
+
+// Listener para mensajes de la interfaz de usuario (popup)
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     if (request.action === "toggle") {
         extensionEnabled = !extensionEnabled;
@@ -42,19 +57,21 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
         serverProxyConfig = request.proxyConfig;
         updateProxyConfig(serverProxyConfig);
         chrome.storage.local.set({ 'proxyConfig': serverProxyConfig });
+    } else if (request.action === "addProxy") {
+        proxyList.push(request.proxyConfig);
+        chrome.storage.local.set({ 'proxyList': proxyList });
     }
 });
 
-// En el evento onInstalled, solo se crea el menú contextual
+// Listener para el evento onInstalled
 chrome.runtime.onInstalled.addListener(function() {
     chrome.contextMenus.create({
-        id: "analyzeLink", // Un ID único para este elemento del menú
+        id: "analyzeLink",
         title: "Analizar con Link Tracer",
         contexts: ["link"]
     });
 });
 
-// Usar chrome.contextMenus.onClicked para manejar los clics en el menú contextual
 chrome.contextMenus.onClicked.addListener(function(info, tab) {
     if (info.menuItemId === "analyzeLink" && info.linkUrl) {
         analyzeLink(info.linkUrl);
@@ -66,27 +83,17 @@ function analyzeLink(url) {
     chrome.tabs.create({ url: analysisPageUrl });
 }
 
-// Se elimina el listener de webRequest.onBeforeRequest ya que en Manifest V3 no se puede usar en un service worker
-// En su lugar, se pueden usar otros enfoques como Declarative Net Request API para algunas funcionalidades.
-
-// Listener para obtener la configuración del proxy del almacenamiento local cuando el service worker se activa
+// Cargar la configuración del proxy y la lista de proxies cuando el service worker se activa
 chrome.runtime.onStartup.addListener(() => {
-    chrome.storage.local.get('proxyConfig', function(data) {
-        serverProxyConfig = data.proxyConfig;
-        if (serverProxyConfig) {
-            updateProxyConfig(serverProxyConfig);
+    chrome.storage.local.get(['proxyConfig', 'proxyList'], function(data) {
+        if (data.proxyConfig) {
+            updateProxyConfig(data.proxyConfig);
+        }
+        if (data.proxyList && data.proxyList.length > 0) {
+            proxyList = data.proxyList;
         }
     });
 });
 
-
-chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
-    if (request.action === "setProxy") {
-        serverProxyConfig = request.proxyConfig;
-        updateProxyConfig(serverProxyConfig);
-        chrome.storage.local.set({ 'proxyConfig': serverProxyConfig });
-    }
-    // Otros manejadores de mensajes...
-});
-
-// Resto de tu código del Service Worker...
+// Verificar la conectividad del proxy periódicamente
+setInterval(checkProxyConnectivity, 10000); // Cada 10 segundos, por ejemplo

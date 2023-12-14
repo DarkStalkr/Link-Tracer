@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Configuración Avanzada - LinkTracer</title>
+    <title>Advanced Configuration - LinkTracer</title>
     <!-- Añadir aquí los estilos y scripts necesarios -->
 </head>
 <body>
-    <h1>Configuración Avanzada</h1>
+    <h1>Advanced Configuration</h1>
     <div>
         <h2>Proxies</h2>
         <form id="proxyForm">
-            <label for="proxyType">Tipo de Proxy:</label>
+            <label for="proxyType">Proxy Type:</label>
             <select id="proxyType" name="proxyType">
                 <option value="http">HTTP</option>
                 <option value="https">HTTPS</option>
@@ -20,13 +20,20 @@
             <label for="proxyHost">Host:</label>
             <input type="text" id="proxyHost" name="proxyHost">
             <br>
-            <label for="proxyPort">Puerto:</label>
+            <label for="proxyPort">Port:</label>
             <input type="number" id="proxyPort" name="proxyPort">
             <br>
-            <button type="submit">Guardar Configuración</button>
+            <button type="submit">Save Configuration</button>
         </form>
-        <script>src="options.js"</script>
+        <!-- Contenedor para mostrar la lista de proxies -->
+        <div id="proxyListContainer">
+            <h3>Current Proxies:</h3>
+            <ul id="proxyList">
+                <!-- Los proxies se añadirán aquí -->
+            </ul>
+        </div>
+        <script src="options.js"></script>
     </div>
-    <!-- Aquí puedes añadir más secciones para otras configuraciones -->
+    <!-- More sections -->
 </body>
 </html>
