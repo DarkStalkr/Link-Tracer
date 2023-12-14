@@ -78,3 +78,15 @@ chrome.runtime.onStartup.addListener(() => {
         }
     });
 });
+
+
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+    if (request.action === "setProxy") {
+        serverProxyConfig = request.proxyConfig;
+        updateProxyConfig(serverProxyConfig);
+        chrome.storage.local.set({ 'proxyConfig': serverProxyConfig });
+    }
+    // Otros manejadores de mensajes...
+});
+
+// Resto de tu código del Service Worker...

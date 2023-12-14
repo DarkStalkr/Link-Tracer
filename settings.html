@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Configuración Avanzada - LinkTracer</title>
+    <!-- Añadir aquí los estilos y scripts necesarios -->
+</head>
+<body>
+    <h1>Configuración Avanzada</h1>
+    <div>
+        <h2>Proxies</h2>
+        <form id="proxyForm">
+            <label for="proxyType">Tipo de Proxy:</label>
+            <select id="proxyType" name="proxyType">
+                <option value="http">HTTP</option>
+                <option value="https">HTTPS</option>
+                <option value="socks4">SOCKS4</option>
+                <option value="socks5">SOCKS5</option>
+            </select>
+            <br>
+            <label for="proxyHost">Host:</label>
+            <input type="text" id="proxyHost" name="proxyHost">
+            <br>
+            <label for="proxyPort">Puerto:</label>
+            <input type="number" id="proxyPort" name="proxyPort">
+            <br>
+            <button type="submit">Guardar Configuración</button>
+        </form>
+        <script>src="options.js"</script>
+    </div>
+    <!-- Aquí puedes añadir más secciones para otras configuraciones -->
+</body>
+</html>

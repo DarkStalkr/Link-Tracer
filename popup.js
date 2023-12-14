@@ -33,3 +33,19 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+
+
+document.getElementById('proxyForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    var proxyType = document.getElementById('proxyType').value;
+    var proxyHost = document.getElementById('proxyHost').value;
+    var proxyPort = document.getElementById('proxyPort').value;
+
+    var proxyConfig = {
+        type: proxyType,
+        host: proxyHost,
+        port: proxyPort
+    };
+
+    chrome.runtime.sendMessage({ action: "setProxy", proxyConfig: proxyConfig });
+});
