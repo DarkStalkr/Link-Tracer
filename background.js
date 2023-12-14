@@ -34,18 +34,7 @@ function updateProxyConfig(proxyConfig) {
     }
 }
 
-
-
-
-// Obtener la configuración del proxy del almacenamiento local
-chrome.storage.local.get('proxyConfig', function(data) {
-    serverProxyConfig = data.proxyConfig;
-    if (serverProxyConfig) {
-        updateProxyConfig(serverProxyConfig);
-    }
-});
-
-// Listener para mensajes de la interfaz de usuario (popup)
+// Service Worker - Listener para mensajes de la interfaz de usuario (popup)
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     if (request.action === "toggle") {
         extensionEnabled = !extensionEnabled;
@@ -56,33 +45,36 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
     }
 });
 
-// Listener para enrutamiento de solicitudes (si la extensión está activada)
-chrome.webRequest.onBeforeRequest.addListener(
-    function (details) {
-        if (extensionEnabled) {
-            // Lógica basada en la configuración del proxy
-        }
-    },
-    { urls: ['<all_urls>'] },
-    ['blocking']
-);
-
-// Listener para el evento onInstalled
+// En el evento onInstalled, solo se crea el menú contextual
 chrome.runtime.onInstalled.addListener(function() {
     chrome.contextMenus.create({
+        id: "analyzeLink", // Un ID único para este elemento del menú
         title: "Analizar con Link Tracer",
-        contexts: ["link"],
-        onclick: function(info, tab) {
-            if(info.linkUrl) {
-                analyzeLink(info.linkUrl);
-            }
-        }
+        contexts: ["link"]
     });
 });
 
+// Usar chrome.contextMenus.onClicked para manejar los clics en el menú contextual
+chrome.contextMenus.onClicked.addListener(function(info, tab) {
+    if (info.menuItemId === "analyzeLink" && info.linkUrl) {
+        analyzeLink(info.linkUrl);
+    }
+});
+
 function analyzeLink(url) {
-    // Construir la URL de la página de análisis con la URL del enlace como parámetro
     var analysisPageUrl = chrome.runtime.getURL("analysis.html") + "?url=" + encodeURIComponent(url);
     chrome.tabs.create({ url: analysisPageUrl });
 }
 
+// Se elimina el listener de webRequest.onBeforeRequest ya que en Manifest V3 no se puede usar en un service worker
+// En su lugar, se pueden usar otros enfoques como Declarative Net Request API para algunas funcionalidades.
+
+// Listener para obtener la configuración del proxy del almacenamiento local cuando el service worker se activa
+chrome.runtime.onStartup.addListener(() => {
+    chrome.storage.local.get('proxyConfig', function(data) {
+        serverProxyConfig = data.proxyConfig;
+        if (serverProxyConfig) {
+            updateProxyConfig(serverProxyConfig);
+        }
+    });
+});

@@ -1,5 +1,5 @@
 {
-    "manifest_version": 2,
+    "manifest_version": 3,
     "version": "1.0",
     "name": "LinkTracer",
     "permissions": [
@@ -8,8 +8,8 @@
         "tabs",
         "webRequest",
         "proxy",
-        "contextMenus",
-        "webRequestBlocking"
+        "contextMenus"
+        
     ],
     "content_scripts": [
         {
@@ -18,16 +18,18 @@
         }
     ],
     "background": {
-        "scripts": ["background.js"],
-        "persistent": true
+        "service_worker": "background.js"
     },
-    "browser_action": {
+    "action": {
         "default_popup": "popup.html",
         "default_icon": {
-            "19": "logo2.png"
+            "16": "logo2.png",
+            "48": "logo2.png",
+            "128": "logo2.png"
         }
     },
     "icons": {
-        "48": "logo2.png"
+        "48": "logo2.png",
+        "128": "logo2.png"
     }
 }
