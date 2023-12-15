@@ -9,15 +9,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
-    function loadPageContent(url) {
+    function loadPagePreview(url) {
         const iframe = document.createElement('iframe');
         iframe.src = url;
-        iframe.sandbox = "allow-same-origin"; // Restringe ciertas capacidades del iframe
+        iframe.sandbox = "allow-same-origin allow-scripts"; // Permite scripts pero mantiene restricciones de seguridad
         document.body.appendChild(iframe);
     }
     
-    // Suponiendo que urlToAnalyze es la URL que obtienes de los parámetros
-    loadPageContent(urlToAnalyze);
+    loadPagePreview(urlToAnalyze);
+    
+    
+   
+
     
 
     // Aquí puedes agregar la lógica para analizar la URL
