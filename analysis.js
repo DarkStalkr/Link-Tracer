@@ -23,6 +23,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
     
 
-    // Aquí puedes agregar la lógica para analizar la URL
-    // Por ejemplo, hacer solicitudes HTTP, revisar seguridad, etc.
+    // Lógica para analizar la URL
+    // Posible implementación, hacer solicitudes HTTP, revisar seguridad, etc.
 });
