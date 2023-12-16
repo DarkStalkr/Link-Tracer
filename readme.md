@@ -38,6 +38,9 @@ To install LinkTracer, follow these steps:
 
 Enjoy secure and informed browsing with LinkTracer!
 
+### Current Status:
+Right now, I'm working to create a backend server, to make all the requests to the links, due to security polcies (CORS)
+
 ## Future Scope:
 The project is in its nascent stages (version 1.1), and future improvements are envisioned based on its trajectory and user feedback.
 
