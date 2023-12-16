@@ -2,6 +2,8 @@
     "manifest_version": 3,
     "version": "1.0",
     "name": "LinkTracer",
+    "author": "Diego CS",
+    "description": "Extend your browser security",
     "permissions": [
         "activeTab",
         "storage",
