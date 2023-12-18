@@ -41,4 +41,17 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 
+document.getElementById('proxyForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    // Obtener los datos del formulario
+    var proxyData = {
+        type: document.getElementById('proxyType').value,
+        host: document.getElementById('proxyHost').value,
+        port: document.getElementById('proxyPort').value
+    };
+    
+    // Enviar los datos al script de fondo
+    chrome.runtime.sendMessage({action: "updateProxyList", data: proxyData});
+});
+
 
