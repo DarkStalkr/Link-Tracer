@@ -31,7 +31,7 @@ When users save the proxy configuration, they receive immediate confirmation in 
 
 To install LinkTracer, follow these steps:
 
-1. Clone the repository [Download the LinkTracer extension](#).
+1. Clone the repository [LinkTracer extension](#).
 2. Go to your browser settings, (developer mode enabled), add unpacked extension.
 3. Configure your proxy settings (if desired).
 4. Activate or deactivate the extension as needed.
