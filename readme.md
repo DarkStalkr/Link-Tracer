@@ -1,7 +1,7 @@
 # LinkTracer
 ![Texto Alternativo](logo2.png)
 
-LinkTracer is a Google Chrome browser extension that allows users to analyze web links quickly and securely. This extension provides several key features that enhance the browsing experience and help users make informed decisions when clicking on external links.
+LinkTracer is a Chromium based browser extension that allows users to analyze web links quickly and securely. This extension provides several key features that enhance the browsing experience and help users make informed decisions when clicking on external links.
 
 ## Key Features
 
