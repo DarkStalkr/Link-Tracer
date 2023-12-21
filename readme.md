@@ -31,8 +31,8 @@ When users save the proxy configuration, they receive immediate confirmation in 
 
 To install LinkTracer, follow these steps:
 
-1. [Download the LinkTracer extension](#) from the Chrome Web Store.
-2. Click on the extension icon in your Chrome browser to open the settings.
+1. Clone the repository [Download the LinkTracer extension](#).
+2. Go to your browser settings, (developer mode enabled), add unpacked extension.
 3. Configure your proxy settings (if desired).
 4. Activate or deactivate the extension as needed.
 
