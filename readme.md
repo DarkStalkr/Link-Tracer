@@ -9,8 +9,8 @@ LinkTracer is a Chromium based browser extension that allows users to analyze we
 The extension allows users to configure a proxy server for anonymous and secure browsing. They can specify the type of proxy, the host, and the desired port.
 
 ## Preview
-![Preview 1](sources/preview1)
-![Preview 2](sources/preview2)
+![Preview 1](sources/preview1.png)
+![Preview 2](sources/preview2.png)
 
 ### Link Analysis
 URL Analysis: Perform both static and dynamic analysis of web addresses (URLs) to mitigate the risks associated with fraudulent links and sophisticated phishing tactics. It involves scrutinizing sender information (IP and MAC addresses), request types (POST, GET, etc.), and the target website.
